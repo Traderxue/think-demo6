@@ -50,4 +50,7 @@ Route::group("/coin",function(){
 
     Route::get("/get/:type","coin/getDetail");
 
+    Route::get("/kline","coin/getKline");
+
+
 });

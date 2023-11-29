@@ -16,20 +16,8 @@ class Coin extends BaseController
     public function __construct(\think\App $app)
     {
         $this->result = new Res();
-
-        $proxyConfig = [
-            'http'  => [
-                'port' => '23457',
-                'host' => '127.0.0.1',
-            ],
-            'https' => [
-                'port' => '23457',
-                'host' => '127.0.0.1',
-            ],
-        ];
-
         $this->client = new Client([
-            'proxy' => $proxyConfig,
+            'verify' => false,
         ]);
     }
 
@@ -63,7 +51,23 @@ class Coin extends BaseController
 
     function getDetail($type)
     {
-        $res = $this->client->get("https://api.huobi.pro/market/detail?symbol={$type}usdt")->getBody()->getContents();
-        return $this->result->success("获取币种信息成功", $res);
+
+        $res = $this->client
+            ->get("https://api.huobi.pro/market/detail?symbol={$type}usdt")
+            ->getBody()
+            ->getContents();
+        return $this->result->success("获取币种信息成功", json_decode($res));
+    }
+
+    function getKline(Request $request)
+    {
+        $type = $request->param("type");
+        $time = $request->param("time");
+
+        $res = $this->client
+            ->get("https://api.huobi.pro/market/history/kline?period={$time}&size=200&symbol={$type}usdt")
+            ->getBody()
+            ->getContents();
+        return $this->result->success("获取数据成功", json_decode($res));
     }
 }
