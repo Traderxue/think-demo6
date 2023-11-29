@@ -39,4 +39,13 @@ Route::group("/position",function(){
     Route::delete("/delete/:id","position/deleteById");
 
     Route::get("/get/:u_id","position/getByUid");
+
+});
+
+Route::group("/coin",function(){
+
+    Route::post("/add","position/add");
+
+    Route::post("/edit","position/edit");
+
 });
