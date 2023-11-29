@@ -44,8 +44,10 @@ Route::group("/position",function(){
 
 Route::group("/coin",function(){
 
-    Route::post("/add","position/add");
+    Route::post("/add","coin/add");
 
-    Route::post("/edit","position/edit");
+    Route::post("/edit","coin/edit");
+
+    Route::get("/get/:type","coin/getDetail");
 
 });
