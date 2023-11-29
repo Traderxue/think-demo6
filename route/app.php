@@ -22,4 +22,13 @@ Route::group("/user",function(){
     Route::post("/login","user/login");
 
     Route::post("/transfer","user/transfer");
+
+    Route::post("/page","user/page");
+});
+
+Route::group("/position",function(){
+
+    Route::post("/open","position/open");
+
+    Route::post("/close","position/close");
 });

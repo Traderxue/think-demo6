@@ -105,4 +105,17 @@ class User extends BaseController
         }
         return $this->result->success("转账成功",null);
     }
+
+    function page(Request $request){
+        $page = $request->param("page",1);
+        $pageSize = $request->param("pageSize",10);
+        $username = $request->param("username");
+
+        $list = UserModel::where("username","like","%{$username}%")->paginate([
+            "page"=>$page,
+            "list_rows"=>$pageSize
+        ]);
+
+        return $this->result->success("获取数据成功",$list);
+    }
 }
