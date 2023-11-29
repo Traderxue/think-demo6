@@ -67,4 +67,30 @@ class Position extends BaseController
         return $this->result->error("平仓失败");
     }
 
+    function page(Request $request){
+        $page = $request->param("page",1);
+        $pageSize = $request->param("pageSize",10);
+        $result = $request->param("result");
+
+        $list= PositionModel::where("result","like","%{$result}%")->paginate([
+            "page"=>$page,
+            "list_rows"=>$pageSize
+        ]);
+
+        return $this->result->success("获取数据成功",$list);
+    }
+
+    function getByUid($u_id){
+        $list = PositionModel::where("u_id",$u_id)->select();
+        return $this->result->success("获取数据成功",$list);
+    }
+
+    function deleteById($id){
+        $res = PositionModel::where("id",$id)->delete();
+        if($res){
+            return $this->result->success("删除数据成功",$res);
+        }
+        return $this->result->error("删除数据失败");
+    }
+
 }

@@ -24,6 +24,8 @@ Route::group("/user",function(){
     Route::post("/transfer","user/transfer");
 
     Route::post("/page","user/page");
+
+    Route::post("/get/:id","user/getByUid");
 });
 
 Route::group("/position",function(){
@@ -31,4 +33,10 @@ Route::group("/position",function(){
     Route::post("/open","position/open");
 
     Route::post("/close","position/close");
+
+    Route::get("/page","position/page");
+
+    Route::delete("/delete/:id","position/deleteById");
+
+    Route::get("/get/:u_id","position/getByUid");
 });
