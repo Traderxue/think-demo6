@@ -16,4 +16,10 @@ Route::group("/user",function(){
     Route::post("/add","user/add");
 
     Route::post("/balance","user/setBalance");
+
+    Route::get("/disable/:id","user/disable");
+
+    Route::post("/login","user/login");
+
+    Route::post("/transfer","user/transfer");
 });
