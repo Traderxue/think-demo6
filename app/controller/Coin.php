@@ -57,6 +57,27 @@ class Coin extends BaseController
         return $this->result->error("数据编辑失败");
     }
 
+    function deleteById($id){
+        $res = CoinModel::where("id",$id)->delete();
+        if($res){
+            return $this->result->success("删除数据成功",null);
+        }
+        return $this->result->error("删除数据失败");
+    }
+
+    function page(Request $request){
+        $page = $request->param("page",1);
+        $pageSize = $request->param("pageSize",10);
+        $type = $request->param("type");
+
+        $list = CoinModel::where("type","like","%{$type}%")->paginate([
+            "page"=>$page,
+            "list_rows"=>$pageSize
+        ]);
+
+        return $this->result->success("获取数据成功",$list);
+    }
+
     function getDetail($type)
     {
         $url = "https://api.huobi.pro/market/detail?symbol={$type}usdt";

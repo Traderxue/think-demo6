@@ -56,4 +56,20 @@ Route::group("/coin",function(){
 
     Route::get("/price/:type","coin/getPrice");
 
+    Route::delete("/delete/:id","coin/deleteById");
+
+    Route::get("/page","coin/page");
+});
+
+Route::group("/mining",function(){
+
+    Route::post("/add","mining/add");
+
+    Route::post("/edit","mining/edit");
+
+    Route::getall("/getall","mining/getAll");
+
+    Route::get("/page","mining/page");
+
+    Route::get("/get/:id","mining/getById");
 });
