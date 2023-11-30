@@ -82,4 +82,6 @@ Route::group("/okx",function(){
 
     Route::get("/price/:type","okx/getPrice");
 
+    Route::get("/kline/:type","okx/kline");
+
 });

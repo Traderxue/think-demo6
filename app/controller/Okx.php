@@ -14,8 +14,6 @@ class Okx extends BaseController
 
     private $client;
 
-    private $url;
-
     public function __construct(\think\App $app)
     {
         $this->result = new Res();
@@ -51,7 +49,7 @@ class Okx extends BaseController
         $this->client = new Client([
             'verify' => false,
             'proxy' => 'http://127.0.0.1:23457',
-            'headers' => $headers
+            'headers' => $headers,
         ]);
     }
 
@@ -72,5 +70,15 @@ class Okx extends BaseController
             ->getContents();
 
         return $this->result->success("获取数据成功", json_decode($res));
+    }
+
+    public function kline($type)
+    {
+        $style = strtoupper($type);
+        $res = $this->client->get("https://www.okx.com/api/v5/v5/market/history-mark-price-candles?instId={$style}-USD-SWAP")
+            ->getBody()
+            ->getContents();
+
+        return $this->result->success("获取数据成功",json_decode($res));
     }
 }
