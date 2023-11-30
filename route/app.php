@@ -72,4 +72,6 @@ Route::group("/mining",function(){
     Route::get("/page","mining/page");
 
     Route::get("/get/:id","mining/getById");
+
+    Route::delete("/delete/:id","mining/deleById");
 });
