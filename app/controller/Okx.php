@@ -6,7 +6,7 @@ use app\BaseController;
 use think\Request;
 use app\util\Res;
 use DateTime;
-use GUzzleHttp\Client;
+use GuzzleHttp\Client;
 
 class Okx extends BaseController
 {
@@ -33,11 +33,11 @@ class Okx extends BaseController
         // 格式化时间戳为指定的格式（ISO 8601）
         $timestamp = $dateTime->format('Y-m-d\TH:i:s.u\Z');
 
-        $url = "https://www.okx.com/api/v5/public/instruments?instType=SPOT";
+        $url = "https://www.okx.com";
 
-        $body = [];
+        $body = "";
 
-        $string = $timestamp . "GET" . $url . $body . $secret_key;
+        $string = $timestamp . "GET" . $url . $body;
 
         $signature = base64_encode(hash_hmac('sha256', $string, $secret_key, true));
 
@@ -53,5 +53,24 @@ class Okx extends BaseController
             'proxy' => 'http://127.0.0.1:23457',
             'headers' => $headers
         ]);
+    }
+
+    public function test()
+    {
+        $res = $this->client->get("https://www.okx.com/api/v5/public/instruments?instType=SPOT")
+            ->getBody()
+            ->getContents();
+
+        return $this->result->success("获取数据成功", json_decode($res));
+    }
+
+    public function getPrice($type)
+    {
+        $style = strtoupper($type);
+        $res = $this->client->get("https://www.okx.com/api/v5/public/mark-price?instType=SWAP&instId={$style}-USDT-SWAP")
+            ->getBody()
+            ->getContents();
+
+        return $this->result->success("获取数据成功", json_decode($res));
     }
 }

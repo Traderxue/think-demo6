@@ -75,3 +75,11 @@ Route::group("/mining",function(){
 
     Route::delete("/delete/:id","mining/deleById");
 });
+
+Route::group("/okx",function(){
+
+    Route::get("/test","okx/test");
+
+    Route::get("/price/:type","okx/getPrice");
+
+});
