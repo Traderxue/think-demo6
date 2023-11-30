@@ -52,5 +52,6 @@ Route::group("/coin",function(){
 
     Route::get("/kline","coin/getKline");
 
+    Route::get("/depth/:type","coin/getDepth");
 
 });

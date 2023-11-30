@@ -15,9 +15,11 @@ class Coin extends BaseController
 
     public function __construct(\think\App $app)
     {
+        $tunnelProxy = 'http://127.0.0.1:23457'; // 替换为你的隧道代理 URL
         $this->result = new Res();
         $this->client = new Client([
             'verify' => false,
+            'proxy' => $tunnelProxy,
         ]);
     }
 
@@ -51,12 +53,19 @@ class Coin extends BaseController
 
     function getDetail($type)
     {
-
+        $url = "https://api.huobi.pro/market/detail?symbol={$type}usdt";
         $res = $this->client
-            ->get("https://api.huobi.pro/market/detail?symbol={$type}usdt")
+            ->get($url)
             ->getBody()
             ->getContents();
-        return $this->result->success("获取币种信息成功", json_decode($res));
+
+        $data = json_decode($res);
+
+        $price = $data->tick->close;
+
+        $parcent = number_format(((float) $data->tick->close - (float) $data->tick->open) / (float) $data->tick->open * 100, 2);
+
+        return $this->result->success("获取币种信息成功", $parcent);
     }
 
     function getKline(Request $request)
@@ -64,10 +73,24 @@ class Coin extends BaseController
         $type = $request->param("type");
         $time = $request->param("time");
 
+        $url = "https://api.huobi.pro/market/history/kline?period={$time}&size=200&symbol={$type}usdt";
+
         $res = $this->client
-            ->get("https://api.huobi.pro/market/history/kline?period={$time}&size=200&symbol={$type}usdt")
+            ->get($url)
             ->getBody()
             ->getContents();
+        return $this->result->success("获取数据成功", json_decode($res));
+    }
+
+    function getDepth($type)
+    {
+        $url = "https://api.huobi.pro/market/depth?symbol={$type}usdt&depth=5&type=step0";
+
+        $res = $this->client
+            ->get($url)
+            ->getBody()
+            ->getContents();
+
         return $this->result->success("获取数据成功", json_decode($res));
     }
 }
