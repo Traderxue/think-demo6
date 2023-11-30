@@ -54,4 +54,6 @@ Route::group("/coin",function(){
 
     Route::get("/depth/:type","coin/getDepth");
 
+    Route::get("/price/:type","coin/getPrice");
+
 });

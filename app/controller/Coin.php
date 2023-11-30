@@ -25,6 +25,12 @@ class Coin extends BaseController
 
     function add(Request $request)
     {
+        $c = CoinModel::where("type", $request->post("type"))->find();
+
+        if ($c) {
+            return $this->result->error("币种已存在");
+        }
+
         $coin = new CoinModel([
             "type" => $request->post("type"),
             "add_time" => date("Y-m-d H:i:s")
@@ -65,7 +71,19 @@ class Coin extends BaseController
 
         $parcent = number_format(((float) $data->tick->close - (float) $data->tick->open) / (float) $data->tick->open * 100, 2);
 
-        return $this->result->success("获取币种信息成功", $parcent);
+        $coin = CoinModel::where("type", $type)->find();
+
+        $res = $coin->save([
+            "price" => $price,
+            "parcent" => $parcent,
+            "volume" => number_format($data->tick->vol, 2)
+        ]);
+
+        if (!$res) {
+            return $this->result->error("获取币种信息失败");
+        }
+
+        return $this->result->success("获取币种信息成功", $coin);
     }
 
     function getKline(Request $request)
@@ -79,7 +97,10 @@ class Coin extends BaseController
             ->get($url)
             ->getBody()
             ->getContents();
-        return $this->result->success("获取数据成功", json_decode($res));
+
+        $data = json_decode($res)->data;
+
+        return $this->result->success("获取数据成功", $data);
     }
 
     function getDepth($type)
@@ -92,5 +113,16 @@ class Coin extends BaseController
             ->getContents();
 
         return $this->result->success("获取数据成功", json_decode($res));
+    }
+
+    function getPrice($type)
+    {
+        $url = "https://api.huobi.pro/market/detail?symbol={$type}usdt";
+
+        $res = $this->client->get($url)->getBody()->getContents();
+
+        $data = json_decode($res);
+
+        return $this->result->success("获取价格成功", $data->tick->close);
     }
 }
